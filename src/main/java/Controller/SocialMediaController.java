@@ -23,14 +23,17 @@ public class SocialMediaController {
      * @return a Javalin app object which defines the behavior of the Javalin controller.
      */
 
+     //define the service objects needed for the handlers at the class level so they can be used by each handler
     AccountService accountService;
     MessageService messageService;
     
+    //instantiate the service objects in the constructor
     public SocialMediaController(){
         this.accountService = new AccountService();
         this.messageService = new MessageService();
     }
 
+    //define each endpoint as defined by the user stories in the readme
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("/register", this::registerAccountHandler);
@@ -46,7 +49,7 @@ public class SocialMediaController {
     }
 
 
-     //This is the handler for processing new account registration endpoint.
+     //Define each handler per the specifications in the user stories
     private void registerAccountHandler(Context context) throws JsonMappingException, JsonProcessingException{
         ObjectMapper om = new ObjectMapper();
         Account account = om.readValue(context.body(), Account.class);
@@ -60,7 +63,7 @@ public class SocialMediaController {
         
     }
 
-    //this handler will validate that the account info sent in the body exists identically in the db
+    
     private void accountLoginHandler(Context context) throws JsonMappingException, JsonProcessingException {
         ObjectMapper om = new ObjectMapper();
         Account account = om.readValue(context.body(), Account.class);
@@ -71,6 +74,7 @@ public class SocialMediaController {
             context.status(401);
         }
     }
+
 
     private void postMessageHandler(Context context) throws JsonMappingException, JsonProcessingException{
         ObjectMapper om = new ObjectMapper();
@@ -102,7 +106,7 @@ public class SocialMediaController {
         }
     }
 
-
+    //update is unique as we need to obtain the pathParam and the new message from the body
     private void updateMessageByIdHandler(Context context) throws JsonProcessingException{
         ObjectMapper om = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));

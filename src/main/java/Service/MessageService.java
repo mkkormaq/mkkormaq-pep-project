@@ -6,6 +6,7 @@ import java.util.*;
 
 
 public class MessageService {
+    //utilize singleton of the MessageDAO
     private MessageDAO messageDAO;
 
     public MessageService(){
@@ -16,8 +17,9 @@ public class MessageService {
         this.messageDAO = messageDAO;
     }
 
+    //maybe could've queried account table in the DAO, but that felt like it was business logic and needed to be in service layer
     public Message addMessage(Message message){
-        AccountDAO accountDAO = new AccountDAO(); //not sure if this is right, but instantiated AccountDAO to verify account by id
+        AccountDAO accountDAO = new AccountDAO(); //using account table to verify account exists.
         int posted_by = message.getPosted_by();
         String message_text = message.getMessage_text();
 

@@ -10,6 +10,8 @@ import Util.*;
 import java.sql.*;
 
 public class MessageDAO {
+
+    //defining each method that directly accesses the db.
     public Message insertMessage(Message message){
         Connection connection = ConnectionUtil.getConnection();
         try{
@@ -32,6 +34,7 @@ public class MessageDAO {
         return null;
     }
 
+    //started shortenting connection and preparedStatement variables here
     public List<Message> getAllMessages(){
         Connection conn = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
@@ -73,6 +76,7 @@ public class MessageDAO {
         return null;
     }
 
+    //could return an int equal to the number of rows affected, but no use for that here
     public void deleteMessageById(int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try{
@@ -87,6 +91,7 @@ public class MessageDAO {
         
     }
 
+    //same here, could return number of affected rows if needed.
     public void updateMessageById(int message_id, String newMessage){
         Connection conn = ConnectionUtil.getConnection();
         try{

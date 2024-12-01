@@ -29,6 +29,8 @@ public class AccountDAO {
         }
         return null;
     }
+
+    //wanted a separate method for retrieving an account by username.
     public Account getAccountByUsername(Account account){
         Connection conn = ConnectionUtil.getConnection();
 
@@ -47,6 +49,7 @@ public class AccountDAO {
         return null;
     }
 
+    //added this method for business logic in the MessageService so we can verify account exists before message is posted
     public Account getAccountById(int account_id){
         Connection conn = ConnectionUtil.getConnection();
 
