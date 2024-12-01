@@ -1,3 +1,9 @@
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import Controller.SocialMediaController;
 import io.javalin.Javalin;
 
@@ -10,5 +16,6 @@ public class Main {
         SocialMediaController controller = new SocialMediaController();
         Javalin app = controller.startAPI();
         app.start(8080);
+
     }
 }
