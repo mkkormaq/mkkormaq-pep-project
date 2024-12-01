@@ -72,4 +72,54 @@ public class MessageDAO {
         }
         return null;
     }
+
+    public void deleteMessageById(int message_id){
+        Connection conn = ConnectionUtil.getConnection();
+        try{
+            String sql = "DELETE FROM message WHERE message_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, message_id);
+            ps.executeUpdate();
+            
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        
+    }
+
+    public void updateMessageById(int message_id, String newMessage){
+        Connection conn = ConnectionUtil.getConnection();
+        try{
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, newMessage);
+            ps.setInt(2, message_id);
+            ps.executeUpdate();
+            
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        
+    }
+
+    public List<Message> getAllMessagesByAccount(int account_id){
+        Connection conn = ConnectionUtil.getConnection();
+        List<Message> messages = new ArrayList<>();
+        try{
+            String sql = "SELECT * FROM message WHERE posted_by = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, account_id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Message message = new Message(rs.getInt("message_id"), 
+                                                rs.getInt("posted_by"),
+                                                rs.getString("message_text"), 
+                                                rs.getLong("time_posted_epoch"));
+                messages.add(message);
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return messages;
+    }
 }

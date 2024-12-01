@@ -7,7 +7,6 @@ import Model.*;
 
 import java.util.List;
 
-import com.fasterxml.jackson.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,9 +38,9 @@ public class SocialMediaController {
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
-        // app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
-        // app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
-        // app.get("/accounts/{account_id}/messages", this::getAllMessagesByAccountHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+        app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
+        app.get("/accounts/{account_id}/messages", this::getAllMessagesByAccountHandler);
 
         return app;
     }
@@ -90,15 +89,49 @@ public class SocialMediaController {
         List<Message> messages = messageService.getAllMessages();
         context.json(messages);
     }
-
+    
     private void getMessageByIdHandler(Context context) throws JsonProcessingException{
         ObjectMapper om = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));
         Message message = messageService.getMessageById(message_id);
+
+        if(message != null){
+            context.json(om.writeValueAsString(message));
+        }else{
+            context.result("");
+        }
+    }
+
+
+    private void updateMessageByIdHandler(Context context) throws JsonProcessingException{
+        ObjectMapper om = new ObjectMapper();
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+        String newMessage = om.readValue(context.body(), Message.class).getMessage_text();
+        Message message = messageService.updateMessageById(message_id, newMessage);
+        if(message == null) {
+            context.status(400);
+        }else{
+            context.json(om.writeValueAsString(message));
+        }
+    }
+
+    private void deleteMessageByIdHandler(Context context) throws JsonProcessingException{
+        ObjectMapper om = new ObjectMapper();
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+        Message message = messageService.getMessageById(message_id);
+
         if(message == null) {
             context.result("");
         }else{
             context.json(om.writeValueAsString(message));
         }
     }
+
+    private void getAllMessagesByAccountHandler(Context context){
+        int account_id = Integer.parseInt(context.pathParam("account_id"));
+        List<Message> messages = messageService.getAllMessagesByAccount(account_id);
+        context.json(messages);
+    }
+
+
 }
