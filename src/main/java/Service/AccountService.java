@@ -19,7 +19,7 @@ public class AccountService {
     public Account addAccount(Account account){
         String username = account.getUsername();
         String password = account.getPassword();
-        if ((username != null) && (password.length() >=4 )&& (accountDAO.getAccountByUsername(account) == null)){
+        if ((username.length() > 0) && (password.length() >=4 )&& (accountDAO.getAccountByUsername(account) == null)){
             return accountDAO.insertAccount(account);
         }else{
             return null;
